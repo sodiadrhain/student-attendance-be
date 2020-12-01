@@ -22,8 +22,9 @@ Route::group(['middleware' => 'userauth:api'], function () {
     Route::get('/', function () {
         return response()->json(['Welcome' => 'Api starts'], 200);
     });
-});
-
-Route::fallback(function () {
-    return response()->json(['message' => 'Not found'], 404);
+    Route::post('/register', 'Api\AuthController@userCreate');
+    Route::post('/login', 'Api\AuthController@userLogin');
+    Route::fallback(function () {
+        return response()->json(['message' => 'Not found'], 404);
+    });
 });
