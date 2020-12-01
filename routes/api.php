@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+
+Route::group(['middleware' => 'userauth:api'], function () {
+    Route::get('/', function () {
+        return response()->json(['Welcome' => 'Api starts'], 200);
+    });
+});
+
+Route::fallback(function () {
+    return response()->json(['message' => 'Not found'], 404);
 });
