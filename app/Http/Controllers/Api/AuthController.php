@@ -106,4 +106,21 @@ class AuthController extends Controller
                 'message' => 'invalid credentials, please try again'
             ]], 400);
     }
+
+    public function userLogout() {
+        auth()->logout();
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'user logged out'
+            ], 200);
+    }
+
+    public static function isAdmin() {
+        if (auth()->user()->user_type !== 'admin') {
+            return response([
+                'error' => 'no access'
+            ]);
+        }
+    }
 }

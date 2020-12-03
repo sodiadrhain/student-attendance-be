@@ -24,7 +24,16 @@ Route::group(['middleware' => 'userauth:api'], function () {
     });
     Route::post('/register', 'Api\AuthController@userCreate');
     Route::post('/login', 'Api\AuthController@userLogin');
-    Route::fallback(function () {
-        return response()->json(['message' => 'Not found'], 404);
-    });
+    Route::get('logout', 'Api\AuthController@userLogout');
+
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::apiResource('/student', 'Api\StudentController');
+    Route::apiResource('/lecturer', 'Api\LecturerController');
+});
+
+Route::fallback(function () {
+    return response()->json(['message' => 'Not found'], 404);
+});
+
