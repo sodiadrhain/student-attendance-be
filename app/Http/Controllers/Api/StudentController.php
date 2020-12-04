@@ -18,7 +18,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::all();
+        $students = Student::with('user', 'faculty', 'department')->get();
         return response([
             'students' => StudentResource::collection($students),
             'message' => 'Retrieved successfully'
@@ -92,8 +92,7 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         return response([
-            'student_data' => new StudentResource($student),
-            'user_data' => auth()->user(),
+            'student_data' => new StudentResource($student->with('user', 'faculty', 'department')->get()),
             'message' => 'Retrieved successfully'
         ], 200);
 

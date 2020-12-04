@@ -18,9 +18,9 @@ class LecturerController extends Controller
      */
     public function index()
     {
-        $students = Lecturer::all();
+        $students = Lecturer::with('user', 'faculty', 'department')->get();
         return response([
-            'students' => LecturerResource::collection($students),
+            'lecturers' => LecturerResource::collection($students),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -85,8 +85,7 @@ class LecturerController extends Controller
     public function show(Lecturer $lecturer)
     {
         return response([
-            'lecturer_data' => new LecturerResource($lecturer),
-            'user_data' => auth()->user(),
+            'lecturer_data' => new LecturerResource($lecturer->with('user', 'faculty', 'department')->get()),
             'message' => 'Retrieved successfully'
         ], 200);
     }
