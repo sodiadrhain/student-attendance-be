@@ -75,7 +75,10 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         return response([
-            'course_data' => new CourseResource($course->with('department', 'faculty')->get()),
+            'course_data' => new CourseResource($course
+                ->where('id', $course->id)
+                ->with('department', 'faculty')
+                ->get()),
             'message' => 'Retrieved successfully'
         ], 200);
     }

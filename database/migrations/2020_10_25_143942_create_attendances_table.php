@@ -15,7 +15,7 @@ class CreateAttendancesTable extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->string('session');
+            $table->string('academic_session');
             $table->string('semester');
             $table->integer('lecturer_id');
             $table->integer('faculty_id');

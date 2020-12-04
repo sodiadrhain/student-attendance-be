@@ -41,12 +41,12 @@ class User extends Authenticatable
 
     public function student()
     {
-        return $this->hasOne('App\Student');
+        return $this->belongsTo('App\Student');
     }
 
     public function lecturer()
     {
-        return $this->hasOne('App\Lecturer');
+        return $this->belongsTo('App\Lecturer');
     }
 
 }

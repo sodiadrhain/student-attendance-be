@@ -77,8 +77,7 @@ class StudentController extends Controller
         }
 
         return response([
-            'student_data' => new StudentResource($student),
-            'user_data' => auth()->user(),
+            'student_data' => new StudentResource($student->with('user', 'faculty', 'department')->get()),
             'message' => 'Student Created successfully'
         ], 201);
     }
@@ -92,10 +91,12 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         return response([
-            'student_data' => new StudentResource($student->with('user', 'faculty', 'department')->get()),
-            'message' => 'Retrieved successfully'
-        ], 200);
-
+            'student_data' => new StudentResource($student
+            ->where('id', $$student->id)
+            ->with('user', 'faculty', 'department')
+            ->get()),
+                'message' => 'Retrieved successfully'
+            ], 200);
     }
 
     /**

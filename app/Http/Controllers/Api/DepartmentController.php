@@ -72,7 +72,10 @@ class DepartmentController extends Controller
     public function show(Department $department)
     {
         return response([
-            'department_data' => new DepartmentResource($department),
+            'department_data' => new DepartmentResource($department
+                ->where('id', $department->id)
+                ->with('faculty')
+                ->get()),
             'message' => 'Retrieved successfully'
         ], 200);
     }

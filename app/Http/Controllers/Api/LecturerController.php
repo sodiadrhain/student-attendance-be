@@ -70,8 +70,7 @@ class LecturerController extends Controller
         }
 
         return response([
-            'lecturer_data' => new LecturerResource($lecturer),
-            'user_data' => auth()->user(),
+            'lecturer_data' => new LecturerResource($lecturer->with('user', 'faculty', 'department')->get()),
             'message' => 'Lecturer Created successfully'
         ], 201);
     }
@@ -85,7 +84,10 @@ class LecturerController extends Controller
     public function show(Lecturer $lecturer)
     {
         return response([
-            'lecturer_data' => new LecturerResource($lecturer->with('user', 'faculty', 'department')->get()),
+            'lecturer_data' => new LecturerResource($lecturer
+                ->where('id', $lecturer->id)
+                ->with('user', 'faculty', 'department')
+                ->get()),
             'message' => 'Retrieved successfully'
         ], 200);
     }
