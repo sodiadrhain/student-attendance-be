@@ -77,7 +77,7 @@ class StudentController extends Controller
         }
 
         return response([
-            'student_data' => new StudentResource($student->with('user', 'faculty', 'department')->get()),
+            'student_data' => new StudentResource($student),
             'message' => 'Student Created successfully'
         ], 201);
     }

@@ -70,7 +70,7 @@ class LecturerController extends Controller
         }
 
         return response([
-            'lecturer_data' => new LecturerResource($lecturer->with('user', 'faculty', 'department')->get()),
+            'lecturer_data' => new LecturerResource($lecturer),
             'message' => 'Lecturer Created successfully'
         ], 201);
     }

@@ -19,7 +19,9 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $attendances = Attendance::with('course', 'lecturer', 'user', 'faculty', 'department')->get();
+        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
+        $attendances = Attendance::where('lecturer_id', $lecturer_id->id)
+            ->with('course', 'faculty', 'department')->get();
         return response([
             'attendances' => AttendanceResource::collection($attendances),
             'message' => 'Retrieved successfully'
@@ -33,7 +35,7 @@ class AttendanceController extends Controller
      * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, User $user)
+    public function store(Request $request)
     {
         if (auth()->user()->user_type !== 'lecturer') {
             return response([
@@ -79,8 +81,7 @@ class AttendanceController extends Controller
         $attendance = Attendance::create($data);
         if ($attendance) {
             return response([
-                'attendance_data' => new AttendanceResource($attendance
-                    ->with('course', 'lecturer', 'faculty', 'department')->get()),
+                'attendance_data' => new AttendanceResource($attendance),
                 'message' => 'Attendance Created successfully'
             ], 201);
         }

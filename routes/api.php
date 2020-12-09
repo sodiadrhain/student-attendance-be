@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('/department', 'Api\DepartmentController');
     Route::apiResource('/course', 'Api\CourseController');
     Route::apiResource('/attendance', 'Api\AttendanceController');
+    Route::apiResource('/attendance_class', 'Api\AttendanceClassController');
 });
 
 Route::fallback(function () {
