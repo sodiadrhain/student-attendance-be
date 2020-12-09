@@ -20,3 +20,5 @@ Route::get('/', function () {
 Route::get('login', function () {
     return response()->json(['error' => 'no access'], 400);
 })->name('login');
+
+Route::get('qrcode/{id}', 'QrCodeController@show');

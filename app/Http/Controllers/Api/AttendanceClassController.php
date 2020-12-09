@@ -46,8 +46,7 @@ class AttendanceClassController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'attendance_id' => 'required',
-            'qr_code_data' => 'required'
+            'attendance_id' => 'required'
         ]);
 
         if($validator->fails()){
@@ -82,6 +81,8 @@ class AttendanceClassController extends Controller
                             'message' => 'attendance class already exists for this course in this session'
                         ]], 400);
                 }
+
+                $data['qr_code_data'] = md5($check_attendance_id.time());
 
                 $attendance_class = AttendanceClass::create($data);
                 if ($attendance_class) {
@@ -126,7 +127,17 @@ class AttendanceClassController extends Controller
      */
     public function update(Request $request, AttendanceClass $attendanceClass)
     {
-        //
+        if (auth()->user()->user_type !== 'lecturer' || auth()->user()->user_type !== 'admin') {
+            return response([
+                'error' => 'no access'
+            ], 400);
+        }
+
+        $attendanceClass->update($request->all());
+        return response([
+            'attendance' => new AttendanceClassResource($attendanceClass),
+            'message' => 'Updated successfully'
+        ], 200);
     }
 
     /**
