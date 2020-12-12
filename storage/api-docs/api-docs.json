@@ -1,0 +1,180 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "LASU Student Attendance Api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register",
+                "description": "Register by Email and Password.",
+                "operationId": "authRegister",
+                "requestBody": {
+                    "description": "Pass user credentials => Email must be @lasu.edu.ng for lecturers and @st.lasu.edu.ng for students",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@lasu.edu.ng"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/v1/user-login": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/v1/all-user": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get list of users",
+                "description": "Returns list of users",
+                "operationId": "getUserList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "api_key_security_example": {
+                "type": "apiKey",
+                "description": "A short description for security scheme",
+                "name": "api_key",
+                "in": "header"
+            },
+            "oauth2_security_example": {
+                "type": "oauth2",
+                "description": "A short description for oauth2 security scheme.",
+                "flow": "implicit",
+                "authorizationUrl": "http://example.com/auth",
+                "scopes": {
+                    "read:projects": "read your projects",
+                    "write:projects": "modify projects in your account"
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "oauth2_security_example": [
+                "read",
+                "write"
+            ],
+            "passport": []
+        }
+    ]
+}

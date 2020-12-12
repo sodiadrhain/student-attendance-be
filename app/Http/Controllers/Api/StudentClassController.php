@@ -24,7 +24,7 @@ class StudentClassController extends Controller
             ], 400);
         }
 
-        if ($request->id === '') {
+        if (!$request->id) {
             return response([
                 'error' => 'no access'
             ], 400);
