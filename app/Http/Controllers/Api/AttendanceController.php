@@ -23,7 +23,7 @@ class AttendanceController extends Controller
         $attendances = Attendance::where('lecturer_id', $lecturer_id->id)
             ->with('course', 'faculty', 'department')->get();
         return response([
-            'attendances' => AttendanceResource::collection($attendances),
+            'data' => AttendanceResource::collection($attendances),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -81,7 +81,7 @@ class AttendanceController extends Controller
         $attendance = Attendance::create($data);
         if ($attendance) {
             return response([
-                'attendance_data' => new AttendanceResource($attendance),
+                'data' => new AttendanceResource($attendance),
                 'message' => 'Attendance Created successfully'
             ], 201);
         }
@@ -102,7 +102,7 @@ class AttendanceController extends Controller
     public function show(Attendance $attendance)
     {
         return response([
-            'attendance_data' => new AttendanceResource($attendance
+            'data' => new AttendanceResource($attendance
                 ->where('id', $attendance->id)
                 ->with('course', 'faculty', 'department')
                 ->get()),
@@ -127,7 +127,7 @@ class AttendanceController extends Controller
 
         $attendance->update($request->all());
         return response([
-            'attendance' => new AttendanceResource($attendance),
+            'data' => new AttendanceResource($attendance),
             'message' => 'Retrieved successfully'
         ], 200);
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Lecturer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\LecturerResource;
 
@@ -14,22 +15,42 @@ class LecturerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Lecturer $lecturer
+     * @return Response
      */
-    public function index()
+    public function index(Lecturer $lecturer)
     {
-        $students = Lecturer::with('user', 'faculty', 'department')->get();
+        if (auth()->user()->user_type === 'admin') {
+            $lecturer = Lecturer::with('user', 'faculty', 'department')->get();
+            return response([
+                'data' => LecturerResource::collection($lecturer),
+                'message' => 'Retrieved successfully'
+            ], 200);
+        }
+
+        $data = $lecturer->where('user_id', auth()->user()->id)->first();
+        if ($data) {
+            return response([
+                'data' => new LecturerResource($lecturer
+                    ->where('user_id', auth()->user()->id)
+                    ->with('user', 'faculty', 'department')
+                    ->first()),
+                'message' => 'Retrieved successfully'
+            ], 200);
+        }
+
         return response([
-            'lecturers' => LecturerResource::collection($students),
-            'message' => 'Retrieved successfully'
+            'data' => null,
+            'message' => 'No Content'
         ], 200);
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -70,7 +91,7 @@ class LecturerController extends Controller
         }
 
         return response([
-            'lecturer_data' => new LecturerResource($lecturer),
+            'data' => new LecturerResource($lecturer),
             'message' => 'Lecturer Created successfully'
         ], 201);
     }
@@ -79,12 +100,12 @@ class LecturerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Lecturer $lecturer)
     {
         return response([
-            'lecturer_data' => new LecturerResource($lecturer
+            'data' => new LecturerResource($lecturer
                 ->where('id', $lecturer->id)
                 ->with('user', 'faculty', 'department')
                 ->get()),
@@ -97,13 +118,13 @@ class LecturerController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Lecturer $lecturer)
     {
         $lecturer->update($request->all());
         return response([
-            'student' => new LecturerResource($lecturer),
+            'data' => new LecturerResource($lecturer),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -112,7 +133,7 @@ class LecturerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Lecturer $lecturer)
     {

@@ -19,7 +19,7 @@ class DepartmentController extends Controller
     {
         $departments = Department::all();
         return response([
-            'departments' => DepartmentResource::collection($departments),
+            'data' => DepartmentResource::collection($departments),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -51,7 +51,7 @@ class DepartmentController extends Controller
         $faculty = Department::create($data);
         if ($faculty) {
             return response([
-                'department_data' => new DepartmentResource($faculty),
+                'data' => new DepartmentResource($faculty),
                 'message' => 'Department created successfully'
             ], 201);
         }
@@ -72,7 +72,7 @@ class DepartmentController extends Controller
     public function show(Department $department)
     {
         return response([
-            'department_data' => new DepartmentResource($department
+            'data' => new DepartmentResource($department
                 ->where('id', $department->id)
                 ->with('faculty')
                 ->get()),
@@ -91,7 +91,7 @@ class DepartmentController extends Controller
     {
         $department->update($request->all());
         return response([
-            'department' => new DepartmentResource($department),
+            'data' => new DepartmentResource($department),
             'message' => 'Retrieved successfully'
         ], 200);
     }

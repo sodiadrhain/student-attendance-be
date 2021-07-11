@@ -14,15 +14,36 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Student $student
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Student $student)
     {
-        $students = Student::with('user', 'faculty', 'department')->get();
+
+        if (auth()->user()->user_type === 'admin') {
+            $students = Student::with('user', 'faculty', 'department')->get();
+            return response([
+                'data' => StudentResource::collection($students),
+                'message' => 'Retrieved successfully'
+            ], 200);
+        }
+
+        $data = $student->where('user_id', auth()->user()->id)->first();
+        if ($data) {
+            return response([
+                'data' => new StudentResource($student
+                    ->where('user_id', auth()->user()->id)
+                    ->with('user', 'faculty', 'department')
+                    ->first()),
+                'message' => 'Retrieved successfully'
+            ], 200);
+        }
+
         return response([
-            'students' => StudentResource::collection($students),
-            'message' => 'Retrieved successfully'
+            'data' => null,
+            'message' => 'No Content'
         ], 200);
+
     }
 
     /**
@@ -77,7 +98,7 @@ class StudentController extends Controller
         }
 
         return response([
-            'student_data' => new StudentResource($student),
+            'data' => new StudentResource($student),
             'message' => 'Student Created successfully'
         ], 201);
     }
@@ -90,13 +111,26 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+//        $data = new StudentResource($student
+//            ->where('id', $student->id)
+//            ->with('user', 'faculty', 'department')
+//            ->first());
+//
+//        if ($data) {
+//            return response([
+//                'student_data' => $data,
+//                'message' => 'Retrieved successfully'
+//            ], 200);
+//        }
+//
+//            return response([
+//                'student_data' => [],
+//            ], 204);
+
         return response([
-            'student_data' => new StudentResource($student
-            ->where('id', $$student->id)
-            ->with('user', 'faculty', 'department')
-            ->get()),
-                'message' => 'Retrieved successfully'
-            ], 200);
+            'message' => 'not found'
+        ]);
+
     }
 
     /**
@@ -110,7 +144,7 @@ class StudentController extends Controller
     {
         $student->update($request->all());
         return response([
-            'student' => new StudentResource($student),
+            'data' => new StudentResource($student),
             'message' => 'Retrieved successfully'
         ], 200);
     }

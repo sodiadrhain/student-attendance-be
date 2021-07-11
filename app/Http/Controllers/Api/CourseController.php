@@ -19,7 +19,7 @@ class CourseController extends Controller
     {
         $courses = Course::with('department', 'faculty')->get();
         return response([
-            'courses' => CourseResource::collection($courses),
+            'data' => CourseResource::collection($courses),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -54,7 +54,7 @@ class CourseController extends Controller
         $course = Course::create($data);
         if ($course) {
             return response([
-                'course_data' => new CourseResource($course),
+                'data' => new CourseResource($course),
                 'message' => 'Course Created successfully'
             ], 201);
         }
@@ -75,7 +75,7 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         return response([
-            'course_data' => new CourseResource($course
+            'data' => new CourseResource($course
                 ->where('id', $course->id)
                 ->with('department', 'faculty')
                 ->get()),
@@ -94,7 +94,7 @@ class CourseController extends Controller
     {
         $course->update($request->all());
         return response([
-            'course' => new CourseResource($course),
+            'data' => new CourseResource($course),
             'message' => 'Retrieved successfully'
         ], 200);
     }

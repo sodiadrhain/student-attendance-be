@@ -19,7 +19,7 @@ class FacultyController extends Controller
     {
         $faculties = Faculty::all();
         return response([
-            'faculties' => FacultyResource::collection($faculties),
+            'data' => FacultyResource::collection($faculties),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -51,7 +51,7 @@ class FacultyController extends Controller
         $faculty = Faculty::create($data);
         if ($faculty) {
             return response([
-                'faculty_data' => new FacultyResource($faculty),
+                'data' => new FacultyResource($faculty),
                 'message' => 'Faculty Created successfully'
             ], 201);
         }
@@ -73,7 +73,7 @@ class FacultyController extends Controller
     public function show(Faculty $faculty)
     {
         return response([
-            'faculty_data' => new FacultyResource($faculty),
+            'data' => new FacultyResource($faculty),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -89,7 +89,7 @@ class FacultyController extends Controller
     {
         $faculty->update($request->all());
         return response([
-            'faculty' => new FacultyResource($faculty),
+            'data' => new FacultyResource($faculty),
             'message' => 'Retrieved successfully'
         ], 200);
     }

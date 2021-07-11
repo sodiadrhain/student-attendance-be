@@ -35,7 +35,7 @@ class StudentClassController extends Controller
         $attendance_classes = StudentClass::where('attendance_class_id', $request->id)
             ->with('student')->get();
         return response([
-            'student attendance classes' => StudentClassResource::collection($attendance_classes),
+            'data' => StudentClassResource::collection($attendance_classes),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -87,7 +87,7 @@ class StudentClassController extends Controller
         $student_class = StudentClass::create($data);
         if ($student_class) {
             return response([
-                'attendance_data' => new StudentClassResource($student_class),
+                'data' => new StudentClassResource($student_class),
                 'message' => 'Student Class Attendance Created successfully'
             ], 201);
         }

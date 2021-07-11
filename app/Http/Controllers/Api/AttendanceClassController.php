@@ -24,7 +24,7 @@ class AttendanceClassController extends Controller
         $attendance_classes = AttendanceClass::where('attendance_id', $check_attendance->id)
             ->with('attendance')->get();
         return response([
-            'attendance classes' => AttendanceClassResource::collection($attendance_classes),
+            'data' => AttendanceClassResource::collection($attendance_classes),
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -87,7 +87,7 @@ class AttendanceClassController extends Controller
                 $attendance_class = AttendanceClass::create($data);
                 if ($attendance_class) {
                     return response([
-                        'attendance_class_data' => new AttendanceClassResource($attendance_class),
+                        'data' => new AttendanceClassResource($attendance_class),
                         'message' => 'Attendance Class Created successfully'
                     ], 201);
                 }
@@ -110,7 +110,7 @@ class AttendanceClassController extends Controller
     public function show(AttendanceClass $attendanceClass)
     {
         return response([
-            'attendance_data' => new AttendanceClassResource($attendanceClass
+            'data' => new AttendanceClassResource($attendanceClass
                 ->where('id', $attendanceClass->id)
                 ->with('attendance')
                 ->get()),
@@ -135,7 +135,7 @@ class AttendanceClassController extends Controller
 
         $attendanceClass->update($request->all());
         return response([
-            'attendance' => new AttendanceClassResource($attendanceClass),
+            'data' => new AttendanceClassResource($attendanceClass),
             'message' => 'Updated successfully'
         ], 200);
     }
