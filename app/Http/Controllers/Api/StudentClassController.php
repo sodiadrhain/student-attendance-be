@@ -57,6 +57,7 @@ class StudentClassController extends Controller
         $data = $request->all();
         $student_id = Student::where('user_id', auth()->user()->id)->first();
         $data['student_id'] = $student_id->id;
+        $data['user_id'] = auth()->user()->id;
 
         $validator = Validator::make($data, [
             'attendance_class_id' => 'required'
