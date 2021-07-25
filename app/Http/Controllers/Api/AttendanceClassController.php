@@ -136,7 +136,7 @@ class AttendanceClassController extends Controller
 //        }
 
 //        $attendanceClass->update($request->all());
-        $attendanceClass->save($request['active']);
+        $attendanceClass->save(['active', $request->active]);
 
         return response([
             'data' => new AttendanceClassResource($attendanceClass),
