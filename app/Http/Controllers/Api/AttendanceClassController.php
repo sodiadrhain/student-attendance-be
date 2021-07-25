@@ -129,13 +129,15 @@ class AttendanceClassController extends Controller
      */
     public function update(Request $request, AttendanceClass $attendanceClass)
     {
-        if (auth()->user()->user_type !== 'lecturer' || auth()->user()->user_type !== 'admin') {
-            return response([
-                'error' => 'no access'
-            ], 400);
-        }
+//        if (auth()->user()->user_type !== 'lecturer' || auth()->user()->user_type !== 'admin') {
+//            return response([
+//                'error' => 'no access'
+//            ], 400);
+//        }
 
-        $attendanceClass->update($request->all());
+//        $attendanceClass->update($request->all());
+        $attendanceClass->save($request['active']);
+
         return response([
             'data' => new AttendanceClassResource($attendanceClass),
             'message' => 'Updated successfully'
