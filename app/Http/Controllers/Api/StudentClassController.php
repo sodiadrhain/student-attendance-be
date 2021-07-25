@@ -123,7 +123,7 @@ class StudentClassController extends Controller
 //        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
 //        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->first();
         $attendance_classes = StudentClass::where('attendance_class_id', $request->student_class)
-            ->with('student')->get();
+            ->with('student', 'user')->get();
         return response([
             'data' => StudentClassResource::collection($attendance_classes),
             'message' => 'Retrieved successfully'
