@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Attendance;
 use App\AttendanceClass;
+use App\Course;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AttendanceClassResource;
 use App\Lecturer;
+use App\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,18 +21,35 @@ class AttendanceClassController extends Controller
      */
     public function index()
     {
-        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
-        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->get();
-        $aaa = array();
-        foreach ($check_attendance as $check_attend) {
-            $attendance_classes = AttendanceClass::where('attendance_id', $check_attend->id)
-                ->with('attendance')->get();
-            $aaa[] = $attendance_classes;
+        if (auth()->user()->user_type === 'lecturer') {
+            $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
+            $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->get();
+            $aaa = array();
+            foreach ($check_attendance as $check_attend) {
+                $attendance_classes = AttendanceClass::where('attendance_id', $check_attend->id)
+                    ->with('attendance')->get();
+                $aaa[] = $attendance_classes;
+            }
+            return response([
+                'data' => $aaa,
+                'message' => 'Retrieved successfully'
+            ], 200);
+        } else {
+            $res = array();
+            $student = Student::where('user_id', auth()->user()->id)->first();
+            $attendance_classes = AttendanceClass::where('active', 1)->with('attendance')->get();
+            foreach ($attendance_classes as $attendance_class){
+                $course = Course::where('id', $attendance_class->attendance->course_id)->first();
+                if ($course->level === $student->level && $course->faculty_id === $student->faculty_id&& $course->department_id === $student->department_id) {
+                    $res[] = $course;
+                }
+            }
+            return response([
+                'data' => $res,
+                'message' => 'Retrieved successfully'
+            ], 200);
         }
-        return response([
-            'data' => $aaa,
-            'message' => 'Retrieved successfully'
-        ], 200);
+
     }
 
     /**
