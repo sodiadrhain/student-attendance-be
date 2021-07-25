@@ -20,11 +20,15 @@ class AttendanceClassController extends Controller
     public function index()
     {
         $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
-        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->first();
-        $attendance_classes = AttendanceClass::where('attendance_id', $check_attendance->id)
-            ->with('attendance')->get();
+        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->get();
+        $aaa = array();
+        foreach ($check_attendance as $check_attend) {
+            $attendance_classes = AttendanceClass::where('attendance_id', $check_attend->id)
+                ->with('attendance')->get();
+            $aaa[] = $attendance_classes;
+        }
         return response([
-            'data' => AttendanceClassResource::collection($attendance_classes),
+            'data' => $aaa,
             'message' => 'Retrieved successfully'
         ], 200);
     }
@@ -43,7 +47,7 @@ class AttendanceClassController extends Controller
             ], 400);
         }
 
-        $data = $request->all();
+        $data = $request->only('attendance_id');
 
         $validator = Validator::make($data, [
             'attendance_id' => 'required'
@@ -67,20 +71,20 @@ class AttendanceClassController extends Controller
         }
 
         $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
-        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->get();
-        foreach ($check_attendance as $check_attend) {
-            if ($check_attend->id === $data['attendance_id']) {
-                $check_exists = AttendanceClass::where([
-                    'qr_code_data' => $request->qr_code_data
-                ])->first();
+        $check_attendance = Attendance::where('id', $data['attendance_id'])->first();
 
-                if ($check_exists) {
-                    return response([
-                        'error' => [
-                            'type' => 'creating error',
-                            'message' => 'attendance class already exists for this course in this session'
-                        ]], 400);
-                }
+            if ($check_attendance) {
+//                $check_exists = AttendanceClass::where([
+//                    'qr_code_data' => $request->qr_code_data
+//                ])->first();
+//
+//                if ($check_exists) {
+//                    return response([
+//                        'error' => [
+//                            'type' => 'creating error',
+//                            'message' => 'attendance class already exists for this course in this session'
+//                        ]], 400);
+//                }
 
                 $data['qr_code_data'] = md5($check_attendance_id.time());
 
@@ -92,7 +96,6 @@ class AttendanceClassController extends Controller
                     ], 201);
                 }
             }
-        }
 
         return response([
             'error' => [
@@ -104,14 +107,13 @@ class AttendanceClassController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\AttendanceClass  $attendanceClass
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function show(AttendanceClass $attendanceClass)
+    public function show(Request $request)
     {
         return response([
-            'data' => new AttendanceClassResource($attendanceClass
-                ->where('id', $attendanceClass->id)
+            'data' => new AttendanceClassResource(AttendanceClass::where('attendance_id', $request->attendance_class)
                 ->with('attendance')
                 ->get()),
             'message' => 'Retrieved successfully'
