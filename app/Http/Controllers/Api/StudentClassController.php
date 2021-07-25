@@ -105,9 +105,28 @@ class StudentClassController extends Controller
      * @param  \App\StudentClass  $studentClass
      * @return \Illuminate\Http\Response
      */
-    public function show(StudentClass $studentClass)
+    public function show(Request $request)
     {
-        //
+        if (auth()->user()->user_type !== 'lecturer') {
+            return response([
+                'error' => 'no access'
+            ], 400);
+        }
+
+        if (!$request->student_class) {
+            return response([
+                'error' => 'no access'
+            ], 400);
+        }
+
+//        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
+//        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->first();
+        $attendance_classes = StudentClass::where('attendance_class_id', $request->student_class)
+            ->with('student')->get();
+        return response([
+            'data' => StudentClassResource::collection($attendance_classes),
+            'message' => 'Retrieved successfully'
+        ], 200);
     }
 
     /**
