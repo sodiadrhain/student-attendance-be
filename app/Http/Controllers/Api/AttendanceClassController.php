@@ -127,7 +127,7 @@ class AttendanceClassController extends Controller
      * @param  \App\AttendanceClass  $attendanceClass
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AttendanceClass $attendanceClass)
+    public function update(Request $request)
     {
 //        if (auth()->user()->user_type !== 'lecturer' || auth()->user()->user_type !== 'admin') {
 //            return response([
@@ -136,10 +136,12 @@ class AttendanceClassController extends Controller
 //        }
 
 //        $attendanceClass->update($request->all());
-        $attendanceClass->save(['active', $request->active]);
+       $attendance = AttendanceClass::where('id', $request->attendance_class)->first();
+       $attendance['active'] = $request->active;
+       $attendance->save();
 
         return response([
-            'data' => new AttendanceClassResource($attendanceClass),
+            'data' => new AttendanceClassResource($attendance),
             'message' => 'Updated successfully'
         ], 200);
     }
