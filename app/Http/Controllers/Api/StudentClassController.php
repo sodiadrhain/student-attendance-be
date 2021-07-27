@@ -24,11 +24,11 @@ class StudentClassController extends Controller
             ], 400);
         }
 
-        if (!$request->id) {
-            return response([
-                'error' => 'no access'
-            ], 400);
-        }
+//        if (!$request->id) {
+//            return response([
+//                'error' => 'no access'
+//            ], 400);
+//        }
 
 //        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
 //        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->first();
