@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AttendanceClassResource;
 use App\Lecturer;
 use App\Student;
+use App\StudentClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -40,8 +41,9 @@ class AttendanceClassController extends Controller
             $attendance_classes = AttendanceClass::where('active', 1)->with('attendance')->get();
             foreach ($attendance_classes as $attendance_class){
                 $course = Course::where('id', $attendance_class->attendance->course_id)->first();
+                $student_class = StudentClass::where(['user_id' => auth()->user()->id, 'attendance_class_id' => $attendance_class->id])->first();
                 if ($course->level === $student->level && $course->faculty_id === $student->faculty_id && $course->department_id === $student->department_id) {
-                    $res[] = ['course_code' => $course->course_code, 'attendance_class_id' =>  $attendance_class->id];
+                    $res[] = ['course_code' => $course->course_code, 'attendance_class_id' =>  $attendance_class->id, 'joined' => $student_class ? 1 : 0];
                 }
             }
             return response([
