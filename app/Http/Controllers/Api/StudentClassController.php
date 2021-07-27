@@ -18,11 +18,11 @@ class StudentClassController extends Controller
      */
     public function index(Request $request)
     {
-        if (auth()->user()->user_type !== 'lecturer') {
-            return response([
-                'error' => 'no access'
-            ], 400);
-        }
+//        if (auth()->user()->user_type !== 'lecturer') {
+//            return response([
+//                'error' => 'no access'
+//            ], 400);
+//        }
 
 //        if (!$request->id) {
 //            return response([
