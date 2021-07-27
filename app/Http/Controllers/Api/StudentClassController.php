@@ -32,10 +32,10 @@ class StudentClassController extends Controller
 
 //        $lecturer_id = Lecturer::where('user_id', auth()->user()->id)->first();
 //        $check_attendance = Attendance::where('lecturer_id', $lecturer_id->id)->first();
-        $attendance_classes = StudentClass::where('student_id', auth()->user()->id)
+        $attendance_classes = StudentClass::where('user_id', auth()->user()->id)
             ->with('student', 'user')->get();
         return response([
-            'data' => StudentClassResource::collection($attendance_classes),
+            'data' => $attendance_classes,
             'message' => 'Retrieved successfully'
         ], 200);
     }
