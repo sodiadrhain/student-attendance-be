@@ -40,8 +40,8 @@ class AttendanceClassController extends Controller
             $attendance_classes = AttendanceClass::where('active', 1)->with('attendance')->get();
             foreach ($attendance_classes as $attendance_class){
                 $course = Course::where('id', $attendance_class->attendance->course_id)->first();
-                if ($course->level === $student->level && $course->faculty_id === $student->faculty_id&& $course->department_id === $student->department_id) {
-                    $res[] = $course;
+                if ($course->level === $student->level && $course->faculty_id === $student->faculty_id && $course->department_id === $student->department_id) {
+                    $res[] = ['course_code' => $course->course_code, 'attendance_class_id' =>  $attendance_class->id];
                 }
             }
             return response([

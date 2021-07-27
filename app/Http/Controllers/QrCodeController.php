@@ -17,6 +17,12 @@ class QrCodeController extends Controller
 
         $get_qr_data = AttendanceClass::where('qr_code_data', $id)->first();
 
+        if ($get_qr_data->active === 0) {
+            return response([
+                'error' => 'cannot generate QR Code, Class is not Active'
+            ]);
+        }
+
         if ($get_qr_data) {
             return view('qrcode', compact('get_qr_data'));
         }
